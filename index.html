@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Basics</title>
+</head>
+<body>
+    <!DOCTYPE html>
+<html>
+  <head>
+    <title>React Basics</title>
+    <link  rel="stylesheet" href="otp.css">
+  </head>
+  <body>
+      <div class="js-container"></div>
+      <script src="https://unpkg.com/supersimpledev/dayjs.js"></script>
+      <script src="https://unpkg.com/supersimpledev/react.js"></script>
+      <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+      <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+      <script type="text/babel">
+        const OtpGenerator = ()=>{
+          const [otp,setOtp] = React.useState(null)
+          const [secondsLeft,setSecondsLeft] = React.useState(0)
+          const [hasStarted,setHasStarted] = React.useState(false)
+
+          React.useEffect(()=>{
+              if (secondsLeft <= 0){
+                return;
+              }
+              const timerId = setTimeout(()=>{
+                  return setSecondsLeft((prev)=> prev -1)
+              },1000)
+              return ()=> clearTimeout(timerId)
+
+          }, [secondsLeft])
+          const generateOtp = ()=>{
+            const code = String(Math.floor(Math.random() * 1000000)).padStart(6, "0")
+            setOtp(code)
+            setSecondsLeft(5)
+            setHasStarted(true)
+          }
+          const isActive = secondsLeft > 0
+          let timerMessage = ""
+          if(hasStarted){
+          { timerMessage = isActive ? `Expires in: ${secondsLeft} seconds` :"click generate otp to generate new otp"}
+          }
+
+          return (
+            <div>
+              <h1 className='otp-title'>Grex Otp Generator</h1>
+              <h2 className='otp-display '>{otp ? otp : "Click  'Generate Otp' to generate new otp"}</h2>
+              <p className="otp-timer ">{timerMessage}</p>
+              <button onClick={generateOtp}
+              disabled={isActive}
+              className="generate-otp-button"
+              >Generate Otp</button>
+              </div>
+          )
+        }
+      function App (){
+  return <OtpGenerator />
+      }
+
+        const container = document.querySelector('.js-container');
+    ReactDOM.createRoot(container).render(
+      <App />
+        );
+
+      </script>
+  </body>
+</html>
+</body>
+</html>
